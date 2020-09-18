@@ -1,38 +1,39 @@
-from .processing import *
-from .distances import *
-from .moments import *
+import numpy as np
+import pandas as pd
+
+import cv2
+
+from .distances import distance_forms, ratio_distance, sorted_distances, mse_distances, dist_humoment
+from .moments import find_moments
 
 
 def get_predictions_with_distances(img_cv, side, prepro):
-    '''
-    This function take in input a image and return a dictionnay of shape distances
-    author: @Gautier, @Nohossat
-    ================================
-    Parameters:
-     @img_cv: input image
-     @side: it take the position of the table, if side is left we take just the left side of table, right we take the right side
-     @prepro: function of preprocessing
-    '''
+    """
+    This function take in input a image and return a dictionnay of shape distances author: @Gautier,
+    @Nohossat ================================ Parameters: @img_cv: input image @side: it take the position of the
+    table, if side is left we take just the left side of table, right we take the right side @prepro: function of
+    preprocessing
+    """
     cnts, cropped_img = prepro(img_cv, side=side)
 
     for c in cnts:
         cv2.drawContours(cropped_img, [c], -1, (50, 255, 50), 2)
 
-    centers, perimeters = distance_formes(cnts)
+    centers, perimeters = distance_forms(cnts)
     distances = ratio_distance(centers, perimeters)
     sorted_dists = sorted_distances(distances)
 
     # get distances
     data = pd.read_csv("data/tangram_properties/data.csv", sep=";")
     mses = np.array(mse_distances(data, sorted_dists))
-    
+
     # get proba
     if np.all((mses == 0)):
         return None
 
     # fix the issue where some proba == 0
-    mses[mses==0] = 0.0001
-    proba = np.round(1/mses/np.sum(1/mses), 3)
+    mses[mses == 0] = 0.0001
+    proba = np.round(1 / mses / np.sum(1 / mses), 3)
 
     # get probabilities
     probas_labelled = data[["classe"]].rename(columns={"classe": "target"})
@@ -42,6 +43,7 @@ def get_predictions_with_distances(img_cv, side, prepro):
 
     # returns sorted probas
     return probas_labelled
+
 
 def get_predictions(image, prepro, side, hu_moments_dataset="data/tangram_properties/hu_moments.csv"):
     """
@@ -69,24 +71,23 @@ def get_predictions(image, prepro, side, hu_moments_dataset="data/tangram_proper
 
     # Our operations on the frame come here
     cnts, img = prepro(image, side=side)
-    
-    HuMo = find_moments(cnts)
 
-    if len(HuMo) == 0 : 
-        return None # the image can't be processed, so empty predictions
+    hu_mo = find_moments(cnts)
+
+    if len(hu_mo) == 0:
+        return None  # the image can't be processed, so empty predictions
 
     # with the hu_moments we can get the predictions
-    HuMo = np.hstack(HuMo)
+    hu_mo = np.hstack(hu_mo)
 
     # get distances
-    dist = hu_moments.apply(lambda row : dist_humoment(HuMo, row.values[:-1]), axis=1)
+    dist = hu_moments.apply(lambda row: dist_humoment(hu_mo, row.values[:-1]), axis=1)
     dist_labelled = pd.concat([dist, target], axis=1)
     dist_labelled.columns = ['distance', 'target']
 
     # get probabilities
-    dist_labelled['proba'] = round((1/dist_labelled['distance']) / np.sum( 1/dist_labelled['distance'], axis=0),2)
-    probas = dist_labelled.sort_values(by=["proba"], ascending=False)[['target','proba']].reset_index(drop=True)
-    
+    dist_labelled['proba'] = round((1 / dist_labelled['distance']) / np.sum(1 / dist_labelled['distance'], axis=0), 2)
+    probas = dist_labelled.sort_values(by=["proba"], ascending=False)[['target', 'proba']].reset_index(drop=True)
+
     # sorted probabilities
     return probas
-

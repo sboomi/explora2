@@ -8,7 +8,7 @@ import pprint
 
 # files from the app
 from .processing import preprocess_img
-from .predictions import *
+from .predictions import get_predictions
 
 """
 main entry in the application: tangram_game
@@ -60,7 +60,7 @@ def tangram_game(side=None, video=0, image=False, prepro=preprocess_img, pred_fu
 
         assert cap.isOpened(), "Unexpected error while reading video stream"
 
-        while (cap.isOpened()):
+        while cap.isOpened():
             ret, image = cap.read()  # Capture frame-by-frame
 
             if not ret:
