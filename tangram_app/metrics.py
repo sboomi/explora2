@@ -15,7 +15,6 @@ def get_classification_report_pics(title_report="Tangram Game", dataset_path=Non
     """
     from a set of images, get global accuracy, precision, recall
     """
-    total_predictions = 0
     y_true = []
     y_pred = []
     classes = ["bateau", "bol", "chat", "coeur", "cygne", "lapin", "maison", "marteau", "montagne", "pont", "renard",

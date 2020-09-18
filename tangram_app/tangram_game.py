@@ -101,7 +101,7 @@ def display_predictions(predictions, image, onscreen=True):
             msg2 = f"2 : {predictions.loc[1, 'target']} - {int(predictions.loc[1, 'proba'] * 100)} %"
             msg3 = f"3 : {predictions.loc[2, 'target']} - {int(predictions.loc[2, 'proba'] * 100)} %"
 
-        # print messages
+        # show messages on video
         font = cv2.FONT_HERSHEY_SIMPLEX
 
         cv2.putText(image, msg, (350, 450),

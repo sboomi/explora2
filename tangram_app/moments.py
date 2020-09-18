@@ -7,7 +7,8 @@ import re
 
 from tangram_app.processing import preprocess_img
 
-def find_moments(cnts, filename=None, hu_moment = True):
+
+def find_moments(cnts, filename=None, hu_moment=True):
     '''
     this function returns the shape's Moments or Hu Moments.
 
@@ -28,25 +29,26 @@ def find_moments(cnts, filename=None, hu_moment = True):
     
     '''
 
-    lst_moments = [cv2.moments(c) for c in cnts] # retrieve moments of all shapes identified
-    lst_areas = [i["m00"] for i in lst_moments] # retrieve areas of all shapes
-    
-    try : 
-        max_idx = lst_areas.index(max(lst_areas)) # select shape with the largest area
+    lst_moments = [cv2.moments(c) for c in cnts]  # retrieve moments of all shapes identified
+    lst_areas = [i["m00"] for i in lst_moments]  # retrieve areas of all shapes
 
-        if hu_moment: # if we want the Hu moments
-            HuMo = cv2.HuMoments(lst_moments[max_idx]) # grab humoments for largest shape
+    try:
+        max_idx = lst_areas.index(max(lst_areas))  # select shape with the largest area
+
+        if hu_moment:  # if we want the Hu moments
+            hu_mo = cv2.HuMoments(lst_moments[max_idx])  # grab humoments for largest shape
             if filename:
-                HuMo = np.append(HuMo, filename)
-            return HuMo
+                hu_mo = np.append(hu_mo, filename)
+            return hu_mo
 
         # if we want to get the moments
-        Moms = lst_moments[max_idx] 
+        moms = lst_moments[max_idx]
         if filename:
-            Moms['target'] = filename
-        return Moms
-    except Exception as e:
-        return [] # predictions impossible
+            moms['target'] = filename
+        return moms
+    except:
+        return []  # predictions impossible
+
 
 def save_moments(images, directory):
     """
@@ -72,9 +74,9 @@ def save_moments(images, directory):
 
         result = pattern.search(image_path)
 
-        if result :
+        if result:
             side = result.group(2)
-        else :
+        else:
             side = None
 
         cnts, img = preprocess_img(img_cv, side=side)
@@ -83,10 +85,9 @@ def save_moments(images, directory):
         moments.append(find_moments(cnts, image_name, hu_moment=False))
 
         hu_moments_df = pd.DataFrame(hu_moments)
-        hu_moments_df.to_csv(directory +'/hu_moments.csv', index=False)
+        hu_moments_df.to_csv(directory + '/hu_moments.csv', index=False)
 
         moments_df = pd.DataFrame(moments)
         moments_df.to_csv(directory + '/moments.csv', index=False)
 
     return hu_moments_df, moments_df
-    
