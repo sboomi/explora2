@@ -10,11 +10,11 @@ import pprint
 from .processing import preprocess_img
 from .predictions import *
 
-
 """
 main entry in the application: tangram_game
 you can do live testing with the tangram_game_live_test
 """
+
 
 def tangram_game(side=None, video=0, image=False, prepro=preprocess_img, pred_func=get_predictions):
     """
@@ -37,7 +37,7 @@ def tangram_game(side=None, video=0, image=False, prepro=preprocess_img, pred_fu
     """
 
     # compare image with dataset images
-    if image :
+    if image:
         assert os.path.exists(image), "the image doesn't exist"
 
         # get size to analyze from image path
@@ -47,8 +47,8 @@ def tangram_game(side=None, video=0, image=False, prepro=preprocess_img, pred_fu
 
         # pass side and image to get predictions function
         img_cv = cv2.imread(image)
-        predictions = pred_func(img_cv, side = side, prepro=prepro)
-        
+        predictions = pred_func(img_cv, side=side, prepro=prepro)
+
         # display image
         # display_img(img_cv)
 
@@ -60,14 +60,14 @@ def tangram_game(side=None, video=0, image=False, prepro=preprocess_img, pred_fu
 
         assert cap.isOpened(), "Unexpected error while reading video stream"
 
-        while(cap.isOpened()):
-            ret, image = cap.read() # Capture frame-by-frame
+        while (cap.isOpened()):
+            ret, image = cap.read()  # Capture frame-by-frame
 
             if not ret:
                 print("we are done")
                 break
 
-            predictions = pred_func(image, side = side, prepro=prepro)
+            predictions = pred_func(image, side=side, prepro=prepro)
             display_predictions(predictions, image, onscreen=True)
 
             if cv2.waitKey(3) & 0xFF == ord('q'):
@@ -77,13 +77,14 @@ def tangram_game(side=None, video=0, image=False, prepro=preprocess_img, pred_fu
         cap.release()
         cv2.destroyAllWindows()
 
+
 def display_predictions(predictions, image, onscreen=True):
     """
     if onscreen True, we display the main proba on screen, otherwise we just print the 12 sorted probabilities
     """
     if onscreen:
         image = imutils.resize(image, width=1200)
-        
+
         if predictions is None:
             prediction_label = "N/A"
             prediction_proba = 0
@@ -99,34 +100,35 @@ def display_predictions(predictions, image, onscreen=True):
             msg += f" - {int(prediction_proba * 100)} %"
             msg2 = f"2 : {predictions.loc[1, 'target']} - {int(predictions.loc[1, 'proba'] * 100)} %"
             msg3 = f"3 : {predictions.loc[2, 'target']} - {int(predictions.loc[2, 'proba'] * 100)} %"
-        
+
         # print messages
         font = cv2.FONT_HERSHEY_SIMPLEX
 
-        cv2.putText(image, msg, (350, 450), 
+        cv2.putText(image, msg, (350, 450),
                     font, 0.8,
-                    (89, 22, 76),  
+                    (89, 22, 76),
                     2,
                     cv2.LINE_4)
 
         if msg2 and msg3:
-            cv2.putText(image, msg2, (350, 500), 
+            cv2.putText(image, msg2, (350, 500),
                         font, 0.6,
-                        (89, 22, 76),  
+                        (89, 22, 76),
                         1,
                         cv2.LINE_4)
 
-            cv2.putText(image, msg3, (350, 525), 
+            cv2.putText(image, msg3, (350, 525),
                         font, 0.6,
-                        (89, 22, 76),  
+                        (89, 22, 76),
                         1,
                         cv2.LINE_4)
 
         # display frame
         cv2.imshow('tangram', image)
         cv2.moveWindow('tangram', 30, 30)
-    else :
+    else:
         print(predictions)
+
 
 def display_img(img):
     cv2.imshow("Predictions", img)

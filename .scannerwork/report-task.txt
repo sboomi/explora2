@@ -1,6 +1,6 @@
-projectKey=exploradrome_tangram_numpy
+projectKey=explora2
 serverUrl=http://localhost:9000
 serverVersion=8.4.2.36762
-dashboardUrl=http://localhost:9000/dashboard?id=exploradrome_tangram_numpy
-ceTaskId=AXSctW75evIw98V-XPEh
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AXSctW75evIw98V-XPEh
+dashboardUrl=http://localhost:9000/dashboard?id=explora2
+ceTaskId=AXShSRQtaTw6pi3iwkdn
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AXShSRQtaTw6pi3iwkdn

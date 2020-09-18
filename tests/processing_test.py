@@ -3,7 +3,8 @@
 """
 
 import re
-
+import cv2
+import numpy as np
 from tangram_app.processing import *
 from tests.helpers.generate_test_variables import generate_first_ctns
 

@@ -7,7 +7,7 @@ Created on Tue Jul 28 15:11:06 2020
 from tangram_app.distances import *
 from .helpers.generate_test_variables import generate_cnts_forms
 import os
-
+import pandas as pd
 
 def test_dist_humoment():
     assert dist_humoment(0.026322267294741648,
