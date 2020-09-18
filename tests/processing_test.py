@@ -2,18 +2,17 @@
 @author: Renata
 """
 
+import pytest
 import re
 import cv2
 import numpy as np
-from tangram_app.processing import *
-from tests.helpers.generate_test_variables import generate_first_ctns
+from tangram_app.processing import preprocess_img, preprocess_img_2, extract_triangles_squares, blur, \
+    extract_triangles_squares_2, crop
+from tests.helpers.generate_test_variables import generate_first_ctns, load_samples
 
 
 def test_preprocess_img():
-    img = 'data/test_images/bateau_4_right.jpg'
-
-    # get side
-    pattern = re.compile(r"([a-zA-Z]+)_\d{1,2}_(\w+)")
+    img, pattern = load_samples()
     result = pattern.search(img)
     side = result.group(2)
 
@@ -24,10 +23,7 @@ def test_preprocess_img():
 
 
 def test_preprocess_img_2():
-    img = 'data/test_images/bateau_4_right.jpg'
-
-    # get side
-    pattern = re.compile(r"([a-zA-Z]+)_\d{1,2}_(\w+)")
+    img, pattern = load_samples()
     result = pattern.search(img)
     side = result.group(2)
 
@@ -44,7 +40,7 @@ def test_extract_triangles_squares():
 
 
 def test_blur():
-    img = 'data/test_images/bateau_4_right.jpg'
+    img, _ = load_samples()
     img_cv = cv2.imread(img)
     image_blurred = blur(img_cv, 3)
     assert isinstance(image_blurred, np.ndarray)
@@ -64,10 +60,7 @@ def test_extract_triangles_squares_2():
 
 
 def test_crop():
-    img = 'data/test_images/bateau_4_right.jpg'
-
-    # get side
-    pattern = re.compile(r"([a-zA-Z]+)_\d{1,2}_(\w+)")
+    img, pattern = load_samples()
     result = pattern.search(img)
     side = result.group(2)
 

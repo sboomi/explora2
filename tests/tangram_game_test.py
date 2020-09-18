@@ -2,6 +2,7 @@
 @author: Renata
 """
 
+import pytest
 import pandas as pd
 from tangram_app.tangram_game import preprocess_img_2,tangram_game
 from tangram_app.predictions import get_predictions_with_distances

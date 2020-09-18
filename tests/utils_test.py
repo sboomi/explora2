@@ -2,7 +2,8 @@
 @author: Renata
 """
 
-from tangram_app.utils import *
+import pytest
+from tangram_app.utils import get_files
 
 
 def test_get_files():

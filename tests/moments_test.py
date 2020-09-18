@@ -4,7 +4,8 @@ Created on Tue Jul 28 15:11:06 2020
 @author: Renata
 """
 
-from tangram_app.moments import *
+import pytest
+from tangram_app.moments import find_moments, save_moments
 from tangram_app.processing import preprocess_img
 from tangram_app.utils import get_files
 import pandas as pd

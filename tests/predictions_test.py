@@ -4,7 +4,7 @@ Created on Tue Jul 28 15:11:06 2020
 @author: Renata
 """
 
-
+import pytest
 import cv2
 import pandas as pd
 import re
